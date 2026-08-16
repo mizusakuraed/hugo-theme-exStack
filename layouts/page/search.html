@@ -27,9 +27,10 @@
     window.searchResultTitleTemplate = "{{ T `search.resultTitle` }}"
 </script>
 
-{{- $opts := dict "minify" hugo.IsProduction "JSXFactory" "createElement" -}}
-{{- $searchScript := resources.Get "ts/search.tsx" | js.Build $opts -}}
-<script type="text/javascript" src="{{ $searchScript.RelPermalink }}" defer></script>
+{{- $opts := dict "minify" hugo.IsProduction "JSXFactory" "createElement" "target" "es2020" -}}
+{{- $searchScript := resources.Get "ts/search.tsx" | js.Build $opts | resources.Fingerprint "sha512" -}}
+<link rel="preload" href="{{ $searchScript.RelPermalink }}" as="script" integrity="{{ $searchScript.Data.Integrity }}">
+<script type="text/javascript" src="{{ $searchScript.RelPermalink }}" defer integrity="{{ $searchScript.Data.Integrity }}" crossorigin="anonymous"></script>
 
 {{ partialCached "footer/footer" . }}
 {{ end }}

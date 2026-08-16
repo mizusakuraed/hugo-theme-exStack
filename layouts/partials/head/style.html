@@ -1,3 +1,5 @@
 {{ $sass := resources.Get "scss/style.scss" }}
-{{ $style := $sass | resources.ToCSS | minify }}
-<link rel="stylesheet" href="{{ $style.RelPermalink }}">
+{{ $sassOptions := dict "outputStyle" "compressed" "precision" 8 "transpiler" "libsass" }}
+{{ $style := $sass | css.Sass $sassOptions | minify | resources.Fingerprint "sha512" }}
+<link rel="preload" href="{{ $style.RelPermalink }}" as="style" integrity="{{ $style.Data.Integrity }}">
+<link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}" crossorigin="anonymous">

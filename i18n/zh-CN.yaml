@@ -11,6 +11,9 @@ article:
     tableOfContents:
         other: 目录
 
+    comments:
+        other: 加载评论
+
     relatedContents:
         other: 相关文章
 

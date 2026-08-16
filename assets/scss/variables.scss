@@ -1,4 +1,4 @@
-$defaultTagBackgrounds: #8ea885, #df7988, #0177b8, #ffb900, #6b69d6;
+$defaultTagBackgrounds: #6366f1, #8b5cf6, #0ea5e9, #f59e0b, #ec4899;
 $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 
 [data-scheme="light"] {
@@ -9,7 +9,7 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 
 [data-scheme="dark"] {
     --pre-text-color: #f8f8f2;
-    --pre-background-color: #272822;
+    --pre-background-color: #1e1e2e;
     @import "partials/highlight/dark.scss";
 }
 
@@ -21,28 +21,61 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
         --main-top-padding: 30px;
     }
 
-    --body-background: #f5f5fa;
+    --body-background: #f5f3ef;
+    --body-background-gradient: radial-gradient(circle at 20% 0%, rgba(99, 102, 241, 0.06), transparent 50%),
+                                radial-gradient(circle at 80% 100%, rgba(139, 92, 246, 0.04), transparent 50%),
+                                #f5f3ef;
+    --pattern-url: url('/img/pattern-light.svg');
+    --pattern-opacity: 0.3;
 
-    --accent-color: #34495e;
-    --accent-color-darker: #2c3e50;
+    --accent-color: #4f46e5;
+    --accent-color-darker: #4338ca;
     --accent-color-text: #fff;
-    --body-text-color: #838383;
+    --body-text-color: #5c6370;
 
-    --tag-border-radius: 4px;
+    /* 统一圆角体系 */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 999px;
+
+    /* 兼容旧变量 */
+    --tag-border-radius: var(--radius-sm);
+    --card-border-radius: var(--radius-md);
+
+    /* Telegram 风格动画 */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-entrance: cubic-bezier(0.22, 1, 0.36, 1);
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 400ms;
+    --duration-lazy: 600ms;
+
+    /* 悬浮位移 - 让动画看得见 */
+    --lift-y: -3px;
+    --lift-y-lg: -5px;
+    --press-scale: 0.97;
 
     --section-separation: 40px;
 
-    --scrollbar-thumb: hsl(0, 0%, 85%);
-    --scrollbar-track: var(--body-background);
+    --scrollbar-thumb: rgba(99, 102, 241, 0.3);
+    --scrollbar-track: transparent;
 
     &[data-scheme="dark"] {
-        --body-background: #303030;
-        --accent-color: #ecf0f1;
-        --accent-color-darker: #bdc3c7;
-        --accent-color-text: #000;
-        --body-text-color: rgba(255, 255, 255, 0.7);
-        --scrollbar-thumb: #424242;
-        --scrollbar-track: var(--body-background);
+        --body-background: #1a1825;
+        --body-background-gradient: radial-gradient(circle at 20% 0%, rgba(99, 102, 241, 0.10), transparent 50%),
+                                    radial-gradient(circle at 80% 100%, rgba(139, 92, 246, 0.06), transparent 50%),
+                                    #1a1825;
+        --pattern-url: url('/img/pattern-dark.svg');
+        --pattern-opacity: 0.22;
+        --accent-color: #818cf8;
+        --accent-color-darker: #6366f1;
+        --accent-color-text: #1e1b4b;
+        --body-text-color: rgba(255, 255, 255, 0.62);
+        --scrollbar-thumb: rgba(129, 140, 248, 0.3);
+        --scrollbar-track: transparent;
     }
 }
 
@@ -54,22 +87,20 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
     --zh-font-family: "Noto Serif SC", "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei";
 
     --base-font-family: "Merriweather", "Noto Serif SC", var(--sys-font-family), var(--zh-font-family), sans-serif;
-    --code-font-family: "LXGW Wenkai Mono", Monaco, Consolas, "Dejavu Sans Mono", "Courier New", monospace;
+    --code-font-family: "SF Mono", "SFMono-Regular", ui-monospace, "Fira Code", "LXGW Wenkai Mono", Monaco, Consolas, "Dejavu Sans Mono", "Courier New", monospace;
 }
 
 /*
 *   Card style
 */
 :root {
-    --card-background: #fff;
-    --card-background-selected: #eaeaea;
+    --card-background: #fffefb;
+    --card-background-selected: #f0ede8;
 
-    --card-text-color-main: #000;
-    --card-text-color-secondary: #747474;
-    --card-text-color-tertiary: #838383;
-    --card-separator-color: rgba(218, 218, 218, 0.5);
-
-    --card-border-radius: 10px;
+    --card-text-color-main: #2c3e50;
+    --card-text-color-secondary: #5c6370;
+    --card-text-color-tertiary: #9ca3af;
+    --card-separator-color: rgba(229, 231, 235, 0.6);
 
     --card-padding: 20px;
 
@@ -88,12 +119,12 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
     }
 
     &[data-scheme="dark"] {
-        --card-background: #424242;
-        --card-background-selected: rgba(255, 255, 255, 0.16);
-        --card-text-color-main: rgba(255, 255, 255, 0.9);
-        --card-text-color-secondary: rgba(255, 255, 255, 0.7);
-        --card-text-color-tertiary: rgba(255, 255, 255, 0.5);
-        --card-separator-color: rgba(255, 255, 255, 0.12);
+        --card-background: #25233a;
+        --card-background-selected: rgba(99, 102, 241, 0.15);
+        --card-text-color-main: rgba(255, 255, 255, 0.92);
+        --card-text-color-secondary: rgba(255, 255, 255, 0.62);
+        --card-text-color-tertiary: rgba(255, 255, 255, 0.40);
+        --card-separator-color: rgba(255, 255, 255, 0.08);
     }
 }
 
@@ -102,13 +133,14 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 */
 :root {
     --article-font-family: var(--base-font-family);
-    --article-font-size: 1.6rem;
+    --article-font-size: 1.65rem;
 
     @include respond(md) {
-        --article-font-size: 1.7rem;
+        --article-font-size: 1.75rem;
     }
 
-    --article-line-height: 1.85;
+    --article-line-height: 1.88;
+    --article-letter-spacing: 0.01em;
 }
 
 /*
@@ -116,42 +148,46 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 */
 :root {
     --blockquote-border-size: 4px;
-    --blockquote-background-color: rgb(248 248 248);
+    --blockquote-background-color: rgba(99, 102, 241, 0.06);
 
     --heading-border-size: 4px;
 
-    --link-background-color: 189, 195, 199;
-    --link-background-opacity: 0.5;
-    --link-background-opacity-hover: 0.7;
+    --link-background-color: 99, 102, 241;
+    --link-background-opacity: 0.15;
+    --link-background-opacity-hover: 0.25;
 
-    --pre-background-color: #272822;
-    --pre-text-color: #f8f8f2;
+    --code-background-color: rgba(244, 63, 94, 0.08);
+    --code-text-color: #be123c;
 
-    --code-background-color: rgba(0, 0, 0, 0.12);
-    --code-text-color: #808080;
-
-    --table-border-color: #dadada;
-    --tr-even-background-color: #efefee;
+    --table-border-color: #e5e7eb;
+    --tr-even-background-color: #f9fafb;
 
     &[data-scheme="dark"] {
-        --code-background-color: #272822;
-        --code-text-color: rgba(255, 255, 255, 0.9);
+        --code-background-color: rgba(251, 113, 133, 0.12);
+        --code-text-color: #fb7185;
 
-        --table-border-color: #717171;
-        --tr-even-background-color: #545454;
+        --table-border-color: #374151;
+        --tr-even-background-color: #1f2937;
 
-        --blockquote-background-color: rgb(75 75 75);
+        --blockquote-background-color: rgba(99, 102, 241, 0.08);
     }
 }
 
 /*
 *   Shadow style
-*   Thanks to https://www.figma.com/community/plugin/744987207861965946/Shadow-picker
 */
 :root {
-    --shadow-l1: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 0px 1px rgba(0, 0, 0, 0.04);
-    --shadow-l2: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
-    --shadow-l3: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
-    --shadow-l4: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
-        0px 0px 1px rgba(0, 0, 0, 0.04);
+    --shadow-l1: 0 1px 3px rgba(60, 50, 40, 0.05), 0 1px 2px rgba(60, 50, 40, 0.04);
+    --shadow-l2: 0 4px 10px -2px rgba(60, 50, 40, 0.08), 0 2px 4px -1px rgba(60, 50, 40, 0.04);
+    --shadow-l3: 0 10px 24px -4px rgba(60, 50, 40, 0.12), 0 4px 8px -2px rgba(60, 50, 40, 0.06);
+    --shadow-l4: 0 18px 36px -6px rgba(60, 50, 40, 0.16), 0 8px 16px -4px rgba(60, 50, 40, 0.08);
+    --shadow-accent: 0 8px 24px -6px rgba(99, 102, 241, 0.30);
+
+    &[data-scheme="dark"] {
+        --shadow-l1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-l2: 0 4px 8px -2px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+        --shadow-l3: 0 12px 20px -4px rgba(0, 0, 0, 0.55), 0 4px 8px -2px rgba(0, 0, 0, 0.35);
+        --shadow-l4: 0 20px 32px -6px rgba(0, 0, 0, 0.6), 0 8px 16px -4px rgba(0, 0, 0, 0.4);
+        --shadow-accent: 0 8px 24px -6px rgba(129, 140, 248, 0.35);
+    }
 }

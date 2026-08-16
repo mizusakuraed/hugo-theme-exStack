@@ -1,49 +1,198 @@
 {{- with .Site.Params.comments.giscus -}}
-<script
-    src="https://giscus.app/client.js"
-    data-repo="{{- .repo -}}"
-    data-repo-id="{{- .repoID -}}"
-    data-category="{{- .category -}}"
-    data-category-id="{{- .categoryID -}}"
-    data-mapping="{{- default `title` .mapping -}}"
-    data-reactions-enabled="{{- default 1 .reactionsEnabled -}}"
-    data-emit-metadata="{{- default 0 .emitMetadata -}}"
-    data-theme="{{- default `light` .lightTheme -}}"
-    crossorigin="anonymous"
-    async
-></script>
-<script>
-    function setGiscusTheme(theme) {
-        let giscus = document.querySelector('iframe.giscus-frame');
-        if (giscus) {
-            giscus.contentWindow.postMessage(
-                { 
-                    giscus: {
-                        setConfig: { 
-                            theme: theme 
-                        }
-                    }
-                },
-                "https://giscus.app"
-            );
-        };
-    };
+<div class="comments-loader" id="comments-loader">
+    <button type="button" class="load-comments-btn" id="load-comments-btn" aria-expanded="false">
+        <span class="load-comments-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </span>
+        <span class="load-comments-text">{{ T "article.comments" | default "加载评论" }}</span>
+        <span class="load-comments-spinner" aria-hidden="true"></span>
+    </button>
+</div>
 
-    (function(){
-        addEventListener('message', (e) => {
-            if (event.origin !== 'https://giscus.app') return;
-            handler()
-        });
-        window.addEventListener('onColorSchemeChange', handler);
+<div id="giscus-container" class="giscus-container" hidden>
+    <script>
+        function loadGiscus() {
+            var s = document.createElement('script');
+            s.src = 'https://giscus.app/client.js';
+            s.setAttribute('data-repo', '{{- .repo -}}');
+            s.setAttribute('data-repo-id', '{{- .repoID -}}');
+            s.setAttribute('data-category', '{{- .category -}}');
+            s.setAttribute('data-category-id', '{{- .categoryID -}}');
+            s.setAttribute('data-mapping', '{{- default `title` .mapping -}}');
+            s.setAttribute('data-reactions-enabled', '{{- default 1 .reactionsEnabled -}}');
+            s.setAttribute('data-emit-metadata', '{{- default 0 .emitMetadata -}}');
+            s.setAttribute('data-theme', '{{- default `light` .lightTheme -}}');
+            s.setAttribute('crossorigin', 'anonymous');
+            s.async = true;
+            document.getElementById('giscus-container').appendChild(s);
+        }
 
-        function handler() {
-            if (document.documentElement.dataset.scheme === "light") {
+        function setGiscusTheme(theme) {
+            var giscus = document.querySelector('iframe.giscus-frame');
+            if (giscus) {
+                giscus.contentWindow.postMessage(
+                    { giscus: { setConfig: { theme: theme } } },
+                    'https://giscus.app'
+                );
+            }
+        }
+
+        function syncGiscusTheme() {
+            if (document.documentElement.dataset.scheme === 'light') {
                 setGiscusTheme('{{- default "light" .lightTheme -}}');
             } else {
                 setGiscusTheme('{{- default "dark_dimmed" .darkTheme -}}');
-            };
-        };
-    }());
-</script>
-{{- end -}}
+            }
+        }
 
+        window.addEventListener('onColorSchemeChange', syncGiscusTheme);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var btn = document.getElementById('load-comments-btn');
+            var loader = document.getElementById('comments-loader');
+            var container = document.getElementById('giscus-container');
+
+            btn.addEventListener('click', function () {
+                btn.classList.add('is-loading');
+                btn.disabled = true;
+                btn.setAttribute('aria-expanded', 'true');
+
+                loadGiscus();
+
+                // 监听 giscus iframe 加载完成
+                var observer = new MutationObserver(function (mutations) {
+                    for (var i = 0; i < mutations.length; i++) {
+                        var added = mutations[i].addedNodes;
+                        for (var j = 0; j < added.length; j++) {
+                            if (added[j].nodeName === 'IFRAME' && added[j].classList.contains('giscus-frame')) {
+                                added[j].addEventListener('load', function () {
+                                    loader.style.display = 'none';
+                                    container.hidden = false;
+                                    syncGiscusTheme();
+                                    observer.disconnect();
+                                });
+                            }
+                        }
+                    }
+                });
+                observer.observe(container, { childList: true, subtree: true });
+
+                // 兜底：6 秒后强制显示容器
+                setTimeout(function () {
+                    if (container.hidden) {
+                        loader.style.display = 'none';
+                        container.hidden = false;
+                        syncGiscusTheme();
+                    }
+                }, 6000);
+            });
+        });
+    </script>
+</div>
+
+<style>
+    .comments-loader {
+        margin-top: var(--section-separation);
+        display: flex;
+        justify-content: center;
+        padding: 30px 20px;
+        background-color: var(--card-background);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-l1);
+    }
+
+    .load-comments-btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 28px;
+        font-family: inherit;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--accent-color-text);
+        background: linear-gradient(135deg, var(--accent-color), var(--accent-color-darker));
+        border: none;
+        border-radius: var(--radius-full);
+        cursor: pointer;
+        box-shadow: var(--shadow-l2);
+        transition: transform var(--duration-normal) var(--ease-spring),
+                    box-shadow var(--duration-normal) var(--ease-smooth),
+                    opacity var(--duration-fast) var(--ease-standard);
+        overflow: hidden;
+        user-select: none;
+    }
+
+    .load-comments-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 60%);
+        opacity: 0;
+        transition: opacity var(--duration-normal) var(--ease-smooth);
+    }
+
+    .load-comments-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-accent);
+    }
+
+    .load-comments-btn:hover:not(:disabled)::before {
+        opacity: 1;
+    }
+
+    .load-comments-btn:active:not(:disabled) {
+        transform: translateY(0) scale(var(--press-scale));
+        transition-duration: var(--duration-fast);
+    }
+
+    .load-comments-btn:disabled {
+        cursor: progress;
+        opacity: 0.9;
+    }
+
+    .load-comments-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform var(--duration-normal) var(--ease-spring);
+    }
+
+    .load-comments-btn:hover:not(:disabled) .load-comments-icon {
+        transform: scale(1.1) rotate(-4deg);
+    }
+
+    .load-comments-spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,0.35);
+        border-top-color: #fff;
+        border-radius: var(--radius-full);
+        animation: comments-spin 0.7s linear infinite;
+    }
+
+    .load-comments-btn.is-loading .load-comments-icon,
+    .load-comments-btn.is-loading .load-comments-text {
+        display: none;
+    }
+
+    .load-comments-btn.is-loading .load-comments-spinner {
+        display: inline-block;
+    }
+
+    @keyframes comments-spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .giscus-container {
+        margin-top: var(--section-separation);
+        padding: 25px 20px;
+        background-color: var(--card-background);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-l1);
+    }
+</style>
+{{- end -}}

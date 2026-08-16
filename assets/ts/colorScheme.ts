@@ -73,7 +73,10 @@ class StackColorScheme {
     }
 
     private bindMatchMedia() {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        // Initialize on construction (the bug: was never set until change event)
+        this.systemPreferScheme = mediaQuery.matches ? 'dark' : 'light';
+        mediaQuery.addEventListener('change', (e) => {
             if (e.matches) {
                 this.systemPreferScheme = 'dark';
             }

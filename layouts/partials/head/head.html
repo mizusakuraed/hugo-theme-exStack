@@ -1,8 +1,17 @@
 <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'>
+<meta name='theme-color' content='#4f46e5' media='(prefers-color-scheme: light)'>
+<meta name='theme-color' content='#1e1b4b' media='(prefers-color-scheme: dark)'>
+<meta name='color-scheme' content='light dark'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
 
 {{- $description := partialCached "data/description" . .RelPermalink -}}
 <meta name='description' content='{{ $description }}'>
+<link rel='dns-prefetch' href='//cdn.jsdelivr.net'>
+<link rel='preconnect' href='https://cdn.jsdelivr.net' crossorigin>
+{{ with .Site.BaseURL }}
+<link rel='preconnect' href='{{ . }}' crossorigin>
+{{ end }}
 
 {{- if and .IsPage .Params.tags -}}
     <meta name='keywords' content='{{ delimit .Params.tags ", " }}'>
@@ -33,7 +42,10 @@
     <link rel="shortcut icon" href="{{ . }}" />
 {{ end }}
 
-<script defer src="https://umami.arckive.link/prtrc" data-website-id="8f092691-0cc0-48dd-966c-1693e1fc51b3"></script>
-<meta name="robots" content="noindex, nofollow" />
+{{- if or (ne hugo.Environment "production") (.Params.draft) -}}
+<meta name="robots" content="noindex, nofollow">
+{{- else -}}
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+{{- end -}}
 {{- template "_internal/google_analytics.html" . -}}
 {{- partial "head/custom.html" . -}}

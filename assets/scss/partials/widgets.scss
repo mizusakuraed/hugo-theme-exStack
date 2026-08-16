@@ -18,17 +18,28 @@
         a {
             background: var(--card-background);
             box-shadow: var(--shadow-l1);
-            border-radius: var(--tag-border-radius);
+            border-radius: var(--radius-sm);
             padding: 8px 20px;
 
             color: var(--card-text-color-main);
             margin-bottom: 10px;
             margin-right: 5px;
             font-size: 1.4rem;
-            transition: box-shadow 0.3s ease;
+            transition: box-shadow var(--duration-normal) var(--ease-smooth),
+                        transform var(--duration-fast) var(--ease-spring),
+                        background-color var(--duration-fast) var(--ease-standard),
+                        color var(--duration-fast) var(--ease-standard);
 
             &:hover {
-                box-shadow: var(--shadow-l2);
+                box-shadow: var(--shadow-accent);
+                transform: translateY(-2px);
+                background-color: var(--accent-color);
+                color: var(--accent-color-text);
+            }
+
+            &:active {
+                transform: translateY(0) scale(var(--press-scale));
+                transition-duration: var(--duration-fast);
             }
         }
     }
@@ -37,12 +48,15 @@
 /* Archives widget */
 .widget.archives {
     .widget-archive--list {
-        border-radius: var(--card-border-radius);
+        border-radius: var(--radius-md);
         box-shadow: var(--shadow-l1);
         background-color: var(--card-background);
+        overflow: hidden;
     }
 
     .archives-year {
+        position: relative;
+
         &:not(:last-of-type) {
             border-bottom: 1.5px solid var(--card-separator-color);
         }
@@ -51,11 +65,23 @@
             font-size: 1.4rem;
             padding: 18px 25px;
             display: flex;
+            transition: background-color var(--duration-fast) var(--ease-standard),
+                        padding-left var(--duration-normal) var(--ease-smooth);
+
+            &:hover {
+                background-color: var(--card-background-selected);
+                padding-left: 30px;
+            }
 
             span.year {
                 flex: 1;
                 color: var(--card-text-color-main);
                 font-weight: bold;
+                transition: color var(--duration-fast) var(--ease-standard);
+            }
+
+            &:hover span.year {
+                color: var(--accent-color);
             }
 
             span.count {

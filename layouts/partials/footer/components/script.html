@@ -1,11 +1,13 @@
-{{- partial "helper/external" (dict "Context" . "Namespace" "Vibrant") -}} {{-
-$opts := dict "minify" hugo.IsProduction -}} {{- $script := resources.Get
-"ts/main.ts" | js.Build $opts -}}
+{{- partial "helper/external" (dict "Context" . "Namespace" "Vibrant") -}}
+{{- $opts := dict "minify" hugo.IsProduction "target" "es2020" -}}
+{{- $script := resources.Get "ts/main.ts" | js.Build $opts | resources.Fingerprint "sha512" -}}
 
-<script type="text/javascript" src="{{ $script.RelPermalink }}" defer></script>
+<link rel="preload" href="{{ $script.RelPermalink }}" as="script" integrity="{{ $script.Data.Integrity }}">
+<script type="text/javascript" src="{{ $script.RelPermalink }}" defer integrity="{{ $script.Data.Integrity }}" crossorigin="anonymous"></script>
 
 {{ if .Page.Store.Get "hasMermaid" }}
-<script async defer src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<script async defer src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js" referrerpolicy="no-referrer"></script>
 <script>
   addLoadEvent(function () {
     mermaid.initialize({
@@ -15,3 +17,191 @@ $opts := dict "minify" hugo.IsProduction -}} {{- $script := resources.Get
   })
 </script>
 {{ end }}
+
+<script>
+(function () {
+  var overlay = null;
+  var img = null;
+  var prevHref = null;
+  var scale = 1;
+  var posX = 0, posY = 0;
+  var dragging = false;
+  var dragStartX = 0, dragStartY = 0;
+  var posStartX = 0, posStartY = 0;
+  var moved = false;
+
+  function applyTransform() {
+    img.style.transform = 'translate(' + posX + 'px, ' + posY + 'px) scale(' + scale + ')';
+  }
+
+  function resetView() {
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    applyTransform();
+  }
+
+  function open(href) {
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'lightbox-overlay';
+
+      img = document.createElement('img');
+      img.draggable = false;
+      overlay.appendChild(img);
+
+      // Wheel zoom
+      overlay.addEventListener('wheel', function (e) {
+        if (!overlay.classList.contains('active')) return;
+        e.preventDefault();
+        var delta = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+        var newScale = Math.max(0.5, Math.min(8, scale * delta));
+        if (newScale === scale) return;
+        // Zoom toward cursor
+        var rect = overlay.getBoundingClientRect();
+        var cx = e.clientX - rect.left - rect.width / 2;
+        var cy = e.clientY - rect.top - rect.height / 2;
+        var ratio = newScale / scale;
+        posX = cx - (cx - posX) * ratio;
+        posY = cy - (cy - posY) * ratio;
+        scale = newScale;
+        applyTransform();
+      }, { passive: false });
+
+      // Drag to pan (only when zoomed in)
+      overlay.addEventListener('pointerdown', function (e) {
+        if (e.target === img && scale > 1.01) {
+          dragging = true;
+          moved = false;
+          dragStartX = e.clientX;
+          dragStartY = e.clientY;
+          posStartX = posX;
+          posStartY = posY;
+          img.style.cursor = 'grabbing';
+          e.preventDefault();
+        }
+      });
+
+      overlay.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var dx = e.clientX - dragStartX;
+        var dy = e.clientY - dragStartY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+        posX = posStartX + dx;
+        posY = posStartY + dy;
+        applyTransform();
+      });
+
+      overlay.addEventListener('pointerup', function (e) {
+        if (dragging) {
+          dragging = false;
+          img.style.cursor = scale > 1.01 ? 'grab' : 'zoom-out';
+        }
+      });
+
+      // Click background or image (without drag) to close
+      overlay.addEventListener('click', function (e) {
+        if (moved) { moved = false; return; }
+        if (scale > 1.01) {
+          // Click on zoomed image resets zoom
+          if (e.target === img) {
+            resetView();
+            img.style.cursor = 'zoom-out';
+            return;
+          }
+        }
+        close();
+      });
+
+      // Double-click toggles zoom
+      overlay.addEventListener('dblclick', function (e) {
+        if (e.target !== img) return;
+        if (scale > 1.01) {
+          resetView();
+          img.style.cursor = 'zoom-out';
+        } else {
+          scale = 2.5;
+          applyTransform();
+          img.style.cursor = 'grab';
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (!overlay || !overlay.classList.contains('active')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === '0') { resetView(); img.style.cursor = 'zoom-out'; }
+        if (e.key === '+' || e.key === '=') {
+          scale = Math.min(8, scale * 1.2);
+          applyTransform();
+          img.style.cursor = scale > 1.01 ? 'grab' : 'zoom-out';
+        }
+        if (e.key === '-') {
+          scale = Math.max(0.5, scale / 1.2);
+          if (scale <= 1.01) { resetView(); }
+          applyTransform();
+          img.style.cursor = scale > 1.01 ? 'grab' : 'zoom-out';
+        }
+      });
+    }
+    if (prevHref !== href) {
+      img.src = href;
+      prevHref = href;
+    }
+    resetView();
+    img.style.cursor = 'zoom-out';
+    document.body.style.overflow = 'hidden';
+    document.body.appendChild(overlay);
+    requestAnimationFrame(function () {
+      overlay.classList.add('active');
+    });
+  }
+
+  function close() {
+    if (!overlay) return;
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(function () {
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      resetView();
+    }, 250);
+  }
+
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('a.lightbox-trigger');
+    if (!trigger) return;
+    var imgEl = trigger.querySelector('img');
+    if (!imgEl) return;
+    e.preventDefault();
+    open(trigger.href);
+  }, true);
+})();
+</script>
+
+{{/* MD3 FAB: 回到顶部逻辑 */}}
+<script>
+(function () {
+  var fab = document.getElementById('md-fab');
+  if (!fab) return;
+
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      if (window.scrollY > 320) {
+        fab.classList.add('visible');
+      } else {
+        fab.classList.remove('visible');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  fab.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>

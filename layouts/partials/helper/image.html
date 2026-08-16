@@ -44,7 +44,9 @@
             {{ $siteResourceImage := resources.GetMatch (printf "%s" ($defaultImageSetting.src | safeURL)) }}
 
             {{ $path := print "/assets/" $defaultImageSetting.src }}
-            {{ if and (fileExists $path) ((os.Stat $path).IsDir)}}
+            {{ if fileExists $path }}
+                {{ $stat := os.Stat $path }}
+                {{ if and $stat $stat.IsDir }}
                 {{ $imgDir := readDir (print "/assets/" $defaultImageSetting.src) }}
                 {{ if ne (len $imgDir) 0 }}
                     {{ if .Context.File }}
@@ -55,6 +57,7 @@
                     {{ else }}
                         {{ $siteResourceImage = resources.GetMatch (print $defaultImageSetting.src (index $imgDir 0).Name) }}
                     {{ end }}
+                {{ end }}
                 {{ end }}
             {{ end }}
 

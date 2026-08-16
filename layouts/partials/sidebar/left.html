@@ -10,14 +10,25 @@
             {{ if (default true .enabled) }}
             <figure class="site-avatar">
                 {{ if not .local }}
-                    <img src="{{ .src }}" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    <img src="{{ .src }}" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar" decoding="async">
                 {{ else }}
                     {{ $avatar := resources.Get (.src) }}
                     
                     {{ if $avatar }}
                         {{ $avatarResized := $avatar.Resize "300x" }}
-                        <img src="{{ $avatarResized.RelPermalink }}" width="{{ $avatarResized.Width }}"
-                            height="{{ $avatarResized.Height }}" class="site-logo" loading="lazy" alt="Avatar">
+                        {{ $avatarResizedFingerprinted := $avatarResized | resources.Fingerprint "sha512" }}
+                        {{ $avatarWebp := "" }}
+                        {{ if ne (path.Ext .src) ".svg" }}
+                            {{ $avatarWebp = $avatar.Resize "300x webp picture q90" }}
+                        {{ end }}
+                        <picture>
+                            {{ with $avatarWebp }}
+                            <source srcset="{{ .RelPermalink }}" type="image/webp">
+                            {{ end }}
+                            <img src="{{ $avatarResizedFingerprinted.RelPermalink }}" width="{{ $avatarResized.Width }}"
+                                height="{{ $avatarResized.Height }}" class="site-logo" loading="lazy" alt="Avatar"
+                                decoding="async" fetchpriority="high">
+                        </picture>
                     {{ else }}
                         {{ errorf "Failed loading avatar from %q" . }}
                     {{ end }}

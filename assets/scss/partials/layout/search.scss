@@ -32,7 +32,7 @@
 
     input {
         padding: 40px 20px 20px;
-        border-radius: var(--card-border-radius);
+        border-radius: var(--radius-md);
         background-color: var(--card-background);
         box-shadow: var(--shadow-l1);
         color: var(--card-text-color-main);
@@ -40,7 +40,7 @@
         border: 0;
         -webkit-appearance: none;
 
-        transition: box-shadow 0.3s ease;
+        transition: box-shadow var(--duration-normal) var(--ease-smooth);
 
         font-size: 1.8rem;
 
@@ -74,7 +74,7 @@
         svg {
             color: var(--card-text-color-secondary);
             stroke-width: 1.33;
-            transition: all 0.3s ease;
+            transition: all var(--duration-normal) var(--ease-smooth);
             width: 20px;
             height: 20px;
         }

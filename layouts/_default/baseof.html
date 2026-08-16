@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
+<html lang="{{ .Site.Language.Locale }}">
     <head>
         {{- partial "head/head.html" . -}}
         {{- block "head" . -}}{{ end }}
@@ -16,6 +16,13 @@
             {{- block "right-sidebar" . -}}{{ end }}
         </div>
         {{ partial "footer/include.html" . }}
+
+        {{/* MD3 FAB: 回到顶部按钮 */}}
+        <button id="md-fab" type="button" aria-label="回到顶部" title="回到顶部">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
     </body>
     <!-- <script>
         if(!window.location.pathname.startsWith('/p/')) {

@@ -1,10 +1,14 @@
 {{ define "main" }}
     <h3 class="section-title">
-        {{ if eq .Parent (.GetPage "/") }}
+        {{- $homePage := "" -}}
+        {{- with .GetPage "/" -}}{{- $homePage = . -}}{{- end -}}
+        {{- if and $homePage .Parent (eq .Parent.Permalink $homePage.Permalink) -}}
             {{ T "list.section" }}
-        {{ else }}
+        {{- else if .Parent -}}
             {{ .Parent.Title }}
-        {{ end }}
+        {{- else -}}
+            {{ T "list.section" }}
+        {{- end }}
     </h3>
 
     <div class="section-card">

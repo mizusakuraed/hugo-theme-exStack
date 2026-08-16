@@ -2,7 +2,7 @@
     display: flex;
     background-color: var(--card-background);
     box-shadow: var(--shadow-l1);
-    border-radius: var(--card-border-radius);
+    border-radius: var(--radius-md);
     overflow: hidden;
     flex-wrap: wrap;
     margin: var(--section-separation) 0;
@@ -10,6 +10,11 @@
     .page-link {
         padding: 16px 32px;
         display: inline-flex;
+        transition: background-color var(--duration-fast) var(--ease-standard);
+
+        &:hover {
+            background-color: var(--card-background-selected);
+        }
 
         &.current {
             font-weight: bold;

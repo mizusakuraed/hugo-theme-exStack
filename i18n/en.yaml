@@ -23,6 +23,9 @@ article:
     tableOfContents:
         other: Table of contents
 
+    comments:
+        other: Load comments
+
     relatedContents:
         other: Related contents
 

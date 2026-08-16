@@ -1,5 +1,6 @@
-/* Place your custom SCSS in HUGO_SITE_FOLDER/assets/scss/custom.scss */
+/* ===== Custom SCSS ===== */
 
+/* ---- 右侧边栏 ---- */
 .right-sidebar {
     max-height: 100vh;
     overflow-y: auto;
@@ -11,154 +12,627 @@
     }
 }
 
-// .widget {
-//     max-height: 100vh;
-//     overflow-y: auto;
-//     scrollbar-width: none;
-//     -ms-overflow-style: none;
-
-//     &::-webkit-scrollbar {
-//         display: none;
-//     }
-// }
-
+/* ---- 文章容器 ---- */
 #article-container {
- word-wrap: break-word;
- overflow-wrap: break-word
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 #article-container a {
- color: #49b1f5
+    color: var(--accent-color);
+    transition: color var(--duration-fast) var(--ease-standard);
 }
 
 #article-container a:hover {
- text-decoration: underline
+    text-decoration: underline;
+    color: var(--accent-color-darker);
 }
 
 #article-container img {
- margin: 0 auto .8rem
+    margin: 0 auto .8rem;
 }
 
-.flink#article-container .friend-list-div > .friend-div a .friend-info,
-.flink#article-container .friend-list-div > .friend-div a .friend-name {
- overflow: hidden;
- -o-text-overflow: ellipsis;
- text-overflow: ellipsis;
- white-space: nowrap
-}
-
+/* ---- 友链页面：等大等宽卡片网格 ---- */
 .flink#article-container .friend-list-div {
- overflow: auto;
- padding: 10px 10px 0;
- text-align: center;
-}
-.flink#article-container .friend-list-div > .friend-div {
- position: relative;
- float: left;
- overflow: hidden;
- margin: 15px 7px;
- width: calc(100% / 3 - 15px);
- height: 90px;
- border-radius: 8px;
- line-height: 17px;
- -webkit-transform: translateZ(0)
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+    padding: 0;
+    overflow: visible;
+    text-align: left;
 }
 
-@media screen and (max-width: 1100px) {
- .flink#article-container .friend-list-div > .friend-div {
-  width: calc(50% - 15px) !important
- }
+.flink#article-container .friend-list-div > .friend-div {
+    position: relative;
+    float: none;
+    overflow: hidden;
+    margin: 0;
+    width: auto;
+    height: auto;
+    min-height: 96px;
+    border-radius: var(--radius-md);
+    background: var(--card-background);
+    box-shadow: var(--shadow-l1);
+    line-height: 1.5;
+    transition: box-shadow var(--duration-normal) var(--ease-smooth),
+                transform var(--duration-normal) var(--ease-smooth),
+                border-color var(--duration-normal) var(--ease-standard);
+    border: 1.5px solid transparent;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--accent-color), var(--accent-color-darker));
+        transform: scaleY(0);
+        transform-origin: center;
+        transition: transform var(--duration-normal) var(--ease-spring);
+    }
+
+    &:hover {
+        box-shadow: var(--shadow-l3);
+        transform: translateY(var(--lift-y));
+        border-color: var(--card-background-selected);
+
+        &::before {
+            transform: scaleY(1);
+        }
+    }
+
+    &:active {
+        transform: translateY(0) scale(var(--press-scale));
+        transition-duration: var(--duration-fast);
+    }
+}
 
 @media screen and (max-width: 600px) {
- .flink#article-container .friend-list-div > .friend-div {
-  width: calc(100% - 15px) !important
- }
-}
-}
-
-.flink#article-container .friend-list-div > .friend-div:hover {
- background: rgba(87, 142, 224, 0.15);
-}
-
-.flink#article-container .friend-list-div > .friend-div:hover img {
- -webkit-transform: rotate(360deg);
- -moz-transform: rotate(360deg);
- -o-transform: rotate(360deg);
- -ms-transform: rotate(360deg);
- transform: rotate(360deg)
+    .flink#article-container .friend-list-div {
+        grid-template-columns: 1fr;
+    }
 }
 
 .flink#article-container .friend-list-div > .friend-div:before {
- position: absolute;
- top: 0;
- right: 0;
- bottom: 0;
- left: 0;
- z-index: -1;
- background: var(--text-bg-hover);
- content: '';
- -webkit-transition: -webkit-transform .3s ease-out;
- -moz-transition: -moz-transform .3s ease-out;
- -o-transition: -o-transform .3s ease-out;
- -ms-transition: -ms-transform .3s ease-out;
- transition: transform .3s ease-out;
- -webkit-transform: scale(0);
- -moz-transform: scale(0);
- -o-transform: scale(0);
- -ms-transform: scale(0);
- transform: scale(0)
-}
-.flink#article-container .friend-list-div > .friend-div:hover:before,
-.flink#article-container .friend-list-div > .friend-div:focus:before,
-.flink#article-container .friend-list-div > .friend-div:active:before {
- -webkit-transform: scale(1);
- -moz-transform: scale(1);
- -o-transform: scale(1);
- -ms-transform: scale(1);
- transform: scale(1)
-}
-.flink#article-container .friend-list-div > .friend-div a {
- color: var(--font-color);
- text-decoration: none
+    display: none;
 }
 
-.flink#article-container .friend-list-div > .friend-div a img{
- float: left;
- margin: 15px 10px;
- width: 60px;
- height: 60px;
- border-radius: 35px;
- -webkit-transition: all .3s;
- -moz-transition: all .3s;
- -o-transition: all .3s;
- -ms-transition: all .3s;
- transition: all .3s
+.flink#article-container .friend-list-div > .friend-div a {
+    color: var(--card-text-color-main);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 22px;
+}
+
+.flink#article-container .friend-list-div > .friend-div a img {
+    float: none;
+    margin: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    flex-shrink: 0;
+    transition: transform var(--duration-normal) var(--ease-spring);
+    box-shadow: var(--shadow-l1);
+}
+
+.flink#article-container .friend-list-div > .friend-div:hover a img {
+    transform: scale(1.1);
 }
 
 .flink#article-container .friend-list-div > .friend-div a .friend-name {
- display: block;
- padding: 16px 10px 0 0;
- height: 40px;
- font-weight: 700;
- font-size: 20px
+    display: block;
+    padding: 0;
+    height: auto;
+    font-weight: 700;
+    font-size: 1.7rem;
+    line-height: 1.3;
+    color: var(--card-text-color-main);
+    /* 允许换行，最多两行 */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
 }
 
 .flink#article-container .friend-list-div > .friend-div a .friend-info {
- display: block;
- padding: 1px 10px 1px 0;
- height: 50px;
- font-size: 13px
+    display: block;
+    padding: 4px 0 0;
+    height: auto;
+    font-size: 1.3rem;
+    line-height: 1.45;
+    color: var(--card-text-color-secondary);
+    /* 允许换行，最多两行省略 */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
 }
 
+.flink#article-container .friend-list-div > .friend-div a > span + span,
+.flink#article-container .friend-list-div > .friend-div a .friend-name + .friend-info {
+    margin-top: 2px;
+}
+
+/* 头像和文字之间的容器，确保文字区不被 flex 压缩 */
+.flink#article-container .friend-list-div > .friend-div a {
+    & > .friend-name,
+    & > .friend-info {
+        min-width: 0;
+    }
+}
+
+
+/* ---- Mermaid 图表 ---- */
 [data-scheme=light] {
     g rect {
-        fill: #afe0f8!important;
-        stroke: black!important;
+        fill: #e0e7ff!important;
+        stroke: #4f46e5!important;
     }
     g line {
-        stroke: black!important;
+        stroke: #6366f1!important;
     }
     g span .edgeLabel {
         background: white!important;
     }
 }
+
+/* ---- Lightbox ---- */
+.lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    cursor: zoom-out;
+    transition: background var(--duration-normal) var(--ease-smooth),
+                backdrop-filter var(--duration-normal) var(--ease-smooth);
+    touch-action: none;
+    user-select: none;
+
+    &.active {
+        background: rgba(0, 0, 0, 0.82);
+        backdrop-filter: blur(6px);
+    }
+
+    img {
+        max-width: 90vw;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: var(--radius-sm);
+        opacity: 0;
+        transition: opacity var(--duration-normal) var(--ease-smooth);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        transform-origin: center center;
+        will-change: transform;
+        pointer-events: auto;
+    }
+
+    &.active img {
+        opacity: 1;
+    }
+}
+
+.lightbox-trigger {
+    cursor: zoom-in;
+    display: contents;
+}
+
+/* ============================================================
+   整体美化增强 —— Material Design 风格 + minimalist indigo
+   ============================================================ */
+
+/* ---- site-name hover 效果 ---- */
+.site-info .site-name a {
+    transition: color var(--duration-fast) var(--ease-standard);
+    &:hover { color: var(--accent-color-darker); }
+}
+
+/* ---- 首页文章卡片：图片底部渐变叠加，提升标题可读性 ---- */
+.article-list article.has-image .article-image {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.18) 100%);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity var(--duration-normal) var(--ease-smooth);
+    }
+}
+
+.article-list article.has-image:hover .article-image::after {
+    opacity: 1;
+}
+
+/* ---- 首页文章卡片：标题字距更紧致，meta 更优雅 ---- */
+.article-list .article-details {
+    .article-title {
+        letter-spacing: -0.015em;
+    }
+
+    .article-time {
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 1.3rem;
+    }
+}
+
+/* ---- section-card (分类/标签/作者归档页头部) 美化 ---- */
+.section-card {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, var(--accent-color), var(--accent-color-darker));
+        opacity: 0.7;
+    }
+
+    .section-term {
+        letter-spacing: -0.015em;
+    }
+
+    .section-count {
+        letter-spacing: 0.08em;
+    }
+}
+
+/* ---- Archives 页面分组标题：加装饰性下划线 ---- */
+.archives-group {
+    .archives-date.section-title {
+        position: relative;
+        display: inline-block;
+        padding-bottom: 6px;
+        letter-spacing: 0.04em;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+        }
+
+        a {
+            transition: color var(--duration-fast) var(--ease-standard);
+            &:hover { color: var(--accent-color); }
+        }
+    }
+}
+
+/* ---- 搜索表单：MD3 风格 focus 下方 accent 下划线 ---- */
+.search-form input {
+    &:focus {
+        box-shadow: var(--shadow-l2);
+    }
+}
+.search-form p {
+    &::after {
+        content: "";
+        position: absolute;
+        left: 2px;
+        right: 2px;
+        bottom: 0;
+        height: 2px;
+        background: var(--accent-color);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform var(--duration-normal) var(--ease-smooth);
+        pointer-events: none;
+        border-radius: var(--radius-full);
+    }
+}
+.search-form p:has(input:focus)::after {
+    transform: scaleX(1);
+}
+
+/* ---- 友链页头部引言（blockquote）稍作区分 ---- */
+.flink#article-container > blockquote,
+.flink#article-container > p {
+    margin-bottom: 1.5em;
+}
+
+/* ---- 文章详情页 hero 图片：更优雅的圆角与阴影 ---- */
+.article-page .main-article .article-header .article-image img {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* ---- 表格 hover 高亮当前行 ---- */
+.article-content table tbody tr {
+    transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.article-content table tbody tr:hover {
+    background-color: rgba(99, 102, 241, 0.06);
+}
+
+/* ---- 分页按钮：更优雅的悬浮效果 ---- */
+.pagination {
+    .page-item {
+        .page-link {
+            transition: all var(--duration-fast) var(--ease-spring);
+        }
+        &:hover .page-link {
+            transform: translateY(-1px);
+        }
+        &:active .page-link {
+            transform: translateY(0) scale(var(--press-scale));
+            transition-duration: var(--duration-fast);
+        }
+    }
+}
+
+/* ---- Footer：渐变线起始位置更精致 ---- */
+footer.site-footer {
+    position: relative;
+
+    &:before {
+        margin-left: 0;
+    }
+}
+
+/* ---- 滚动条：亮色模式细微调整 ---- */
+[data-scheme="light"] {
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(99, 102, 241, 0.28);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(99, 102, 241, 0.45);
+    }
+}
+
+/* ---- 暗色模式：卡片边框细微高光，增加层次感 ---- */
+[data-scheme="dark"] {
+    .article-list article,
+    .article-list--compact,
+    .section-card,
+    .widget--toc,
+    .search-form input {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .article-list--compact article:not(:last-of-type) {
+        border-bottom: 1.5px solid var(--card-separator-color);
+    }
+}
+
+/* ---- 选中文字高亮色 ---- */
+::selection {
+    background: rgba(99, 102, 241, 0.18);
+    color: inherit;
+}
+[data-scheme="dark"] ::selection {
+    background: rgba(129, 140, 248, 0.25);
+}
+
+/* ---- 链接 title 属性 tooltip 默认样式（浏览器原生增强） ---- */
+[title] {
+    text-underline-offset: 3px;
+}
+
+/* ============================================================
+   Material Design 增强 —— State Layer / Elevation / FAB / Chip
+   保持克制：只做质感，不做花哨动效
+   ============================================================ */
+
+/* ---- MD3 State Layer：菜单项 hover/active 半透明叠加 ---- */
+.menu li a,
+#dark-mode-toggle {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.menu li a::before,
+#dark-mode-toggle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent-color);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.menu li a:hover::before,
+#dark-mode-toggle:hover::before {
+    opacity: 0.08;
+}
+
+.menu li a:active::before,
+#dark-mode-toggle:active::before {
+    opacity: 0.12;
+}
+
+.menu li.current a::before {
+    opacity: 0.10;
+}
+
+[data-scheme="dark"] .menu li a:hover::before,
+[data-scheme="dark"] #dark-mode-toggle:hover::before {
+    opacity: 0.12;
+}
+
+/* ---- MD3 卡片：文章卡片圆角加大到 16px（medium） ---- */
+.article-list > article {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+/* ---- MD3 卡片：友链卡片圆角统一 16px ---- */
+.flink#article-container .friend-list-div > .friend-div {
+    border-radius: var(--radius-lg);
+}
+
+/* ---- MD3 卡片：紧凑列表项 hover state layer ---- */
+.article-list--compact article {
+    position: relative;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.article-list--compact article:hover {
+    background-color: rgba(99, 102, 241, 0.05);
+}
+[data-scheme="dark"] .article-list--compact article:hover {
+    background-color: rgba(129, 140, 248, 0.08);
+}
+
+/* ---- MD3 FAB：回到顶部浮动按钮 ---- */
+#md-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--accent-color);
+    color: var(--accent-color-text);
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-l3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px) scale(0.8);
+    transition: opacity var(--duration-normal) var(--ease-smooth),
+                transform var(--duration-normal) var(--ease-spring),
+                visibility 0s linear var(--duration-normal),
+                box-shadow var(--duration-fast) var(--ease-standard);
+    z-index: 40;
+    -webkit-appearance: none;
+}
+
+#md-fab.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    transition: opacity var(--duration-normal) var(--ease-smooth),
+                transform var(--duration-normal) var(--ease-spring),
+                visibility 0s,
+                box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+#md-fab:hover {
+    box-shadow: var(--shadow-l4), 0 0 0 6px rgba(99, 102, 241, 0.12);
+    transform: translateY(-2px);
+}
+
+#md-fab:active {
+    transform: translateY(0) scale(0.92);
+    transition-duration: var(--duration-fast);
+}
+
+#md-fab svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2;
+}
+
+@media screen and (max-width: 768px) {
+    #md-fab {
+        right: 16px;
+        bottom: 16px;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* ---- MD3 Chip：标签改为扁平 state layer 风格 ---- */
+.article-content a.button-tag,
+.tag-article a.button-tag,
+.article-list--tile article a {
+    position: relative;
+    overflow: hidden;
+    transition: background-color var(--duration-fast) var(--ease-standard),
+                transform var(--duration-fast) var(--ease-spring);
+}
+
+.article-content a.button-tag:hover,
+.tag-article a.button-tag:hover {
+    transform: translateY(-1px);
+}
+
+/* ---- MD3 头像：去掉旧 outline 环，改用 MD3 elevation + 细 ring ---- */
+.site-avatar .site-logo {
+    outline: 0 !important;
+    outline-offset: 0 !important;
+    border: 2px solid var(--accent-color) !important;
+    box-shadow: var(--shadow-l2) !important;
+    transition: transform var(--duration-normal) var(--ease-spring),
+                box-shadow var(--duration-normal) var(--ease-smooth),
+                border-color var(--duration-normal) var(--ease-standard) !important;
+}
+
+.site-avatar:hover .site-logo {
+    outline: 0 !important;
+    transform: scale(1.04) !important;
+    box-shadow: var(--shadow-l3) !important;
+    border-color: var(--accent-color-darker) !important;
+}
+
+/* ---- MD3 文章卡片首图：圆角 + state layer ---- */
+.article-list article.has-image .article-image img {
+    transition: transform var(--duration-slow) var(--ease-smooth);
+}
+
+.article-list article.has-image:hover .article-image img {
+    transform: scale(1.03);
+}
+
+/* ---- MD3 分隔器：细线更精致 ---- */
+.article-list--compact article:not(:last-of-type) {
+    border-bottom: 1px solid var(--card-separator-color);
+}
+
+/* ---- MD3 按钮：加载评论按钮 ripple-like 效果 ---- */
+#load-comments-btn {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.18);
+        opacity: 0;
+        transition: opacity var(--duration-fast) var(--ease-standard);
+        pointer-events: none;
+    }
+
+    &:hover::after { opacity: 1; }
+    &:active::after { opacity: 0.28; }
+}
+
+/* ---- MD3 Elevation：暗色模式卡片细微高光边框 ---- */
+[data-scheme="dark"] {
+    .article-list > article,
+    .section-card,
+    .widget--toc,
+    .search-form input,
+    .flink#article-container .friend-list-div > .friend-div {
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+}
+

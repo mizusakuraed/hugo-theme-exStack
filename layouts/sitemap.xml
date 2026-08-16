@@ -1,10 +1,14 @@
 {{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-    {{ range .Data.Pages }}
+    {{- $pages := .Data.Pages -}}
+    {{- if not $pages -}}
+        {{- $pages = site.RegularPages -}}
+    {{- end -}}
+    {{ range $pages }}
         {{- if .Permalink -}}
             {{ $url := .Permalink }}
-            {{ if .Site.Params.TrimTrailingSlash }}
+            {{ if site.Params.TrimTrailingSlash }}
                 {{ $url = $url | replaceRE "/$" "" }}
             {{ end }}
             <url>

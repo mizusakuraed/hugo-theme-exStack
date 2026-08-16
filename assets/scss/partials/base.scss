@@ -1,6 +1,7 @@
 html {
     font-size: 62.5%;
     overflow-y: scroll;
+    overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
@@ -9,28 +10,57 @@ html {
 }
 
 body {
-    background: var(--body-background);
+    background: var(--body-background-gradient);
+    background-attachment: fixed;
     margin: 0;
     font-family: var(--base-font-family);
     font-size: 1.6rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    position: relative;
+
+    /* Telegram-style tilted doodle pattern */
+    &::after {
+        content: "";
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background-image: var(--pattern-url);
+        background-repeat: repeat;
+        background-size: 80px 80px;
+        transform: rotate(-12deg);
+        opacity: var(--pattern-opacity);
+        pointer-events: none;
+        z-index: 0;
+    }
+}
+
+/* Ensure all content sits above the pattern layer */
+.main-container {
+    position: relative;
+    z-index: 1;
 }
 
 /* scrollbar styles for Firefox */
 * {
-    scrollbar-width: auto;
+    scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 /**/
 
 /* scrollbar styles for Chromium */
 ::-webkit-scrollbar {
-    height: auto;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb);
+    border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-track {

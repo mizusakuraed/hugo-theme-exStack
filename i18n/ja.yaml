@@ -11,6 +11,9 @@ article:
     tableOfContents:
         other: 目次
 
+    comments:
+        other: コメントを読み込む
+
     relatedContents:
         other: 関連するコンテンツ
 

@@ -3,29 +3,42 @@ footer.site-footer {
     font-size: 1.4rem;
     line-height: 1.75;
     margin-top: var(--section-separation);
+    color: var(--body-text-color);
 
     &:before {
         content: "";
         display: block;
-        height: 3px;
-        width: 50px;
-        background: var(--body-text-color);
-        margin-bottom: 20px;
+        height: 2px;
+        width: 60px;
+        background: linear-gradient(90deg, var(--accent-color), transparent);
+        border-radius: var(--radius-full);
+        margin-bottom: 18px;
+        transition: width var(--duration-slow) var(--ease-spring);
+    }
+
+    &:hover:before {
+        width: 140px;
     }
 
     .copyright {
-        color: var(--accent-color);
-        font-weight: bold;
-        margin-bottom: 5px;
+        color: var(--card-text-color-main);
+        font-weight: 600;
+        margin-bottom: 4px;
+        font-size: 1.5rem;
     }
 
     .powerby {
-        color: var(--body-text-color);
-        font-weight: normal;
+        color: var(--card-text-color-tertiary);
+        font-weight: 400;
         font-size: 1.2rem;
 
         a {
-            color: var(--body-text-color);
+            color: var(--card-text-color-secondary);
+            transition: color var(--duration-fast) var(--ease-standard);
+
+            &:hover {
+                color: var(--accent-color);
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
   background: #eef6fd;
   padding: 8px 20px;
   border-left: 3px solid #38a3fd;
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   margin-bottom: 10px;
   color: #444;
 }
@@ -13,7 +13,7 @@
 
 .tip:before {
   background: #38a3fd;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   color: #fff;
   content: "i";
   font-family: Dosis,"Source Sans Pro","Helvetica Neue",Arial,sans-serif;

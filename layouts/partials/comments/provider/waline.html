@@ -16,9 +16,9 @@
     }
 </style>
 
-<!-- {{- with .Site.Params.comments.waline -}}
+{{- with .Site.Params.comments.waline -}}
+<!-- Waline client configuration see: https://waline.js.org/en/reference/client.html
 <script>
-    /// Waline client configuration see: https://waline.js.org/en/reference/client.html
     addLoadEvent(function(){
         new Waline({
             el: '#waline',
@@ -31,5 +31,6 @@
             requiredMeta: ['nick', 'mail']
         });
     });
-</script> -->
+</script>
+-->
 {{- end -}}
